@@ -1,11 +1,19 @@
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+
+// add body-parser
+app.use(bodyParser.json());
 
 // env config
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
 }
+
+// import routes
+const routes = require('./server/routes/router')
+app.use(routes)
 
 // port define
 const PORT = process.env.PORT;
