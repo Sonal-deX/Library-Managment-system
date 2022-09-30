@@ -8,6 +8,10 @@ const userthasbook = new mongoose.Schema({
     book:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'Book'
+    },
+    borrowDate:{
+        type:Date,
+        required:true
     }
 })
 

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const UHB = require('./userHasbook')
 
 const bookSchema = new mongoose.Schema({
     bookId:{
@@ -24,7 +25,16 @@ const bookSchema = new mongoose.Schema({
     category:{
         type: 'string',
         required: true
+    },
+    img:{
+        url:'string',
+        filename:'string'
+    },
+    status:{
+        type:'number',
+        required: true
     }
 })
+
 
 module.exports = mongoose.model('Book',bookSchema);

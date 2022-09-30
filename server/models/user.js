@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const UHB = require('./userHasbook')
 
 const userSchema = new mongoose.Schema({
     admissionNo:{
@@ -32,7 +33,12 @@ const userSchema = new mongoose.Schema({
     subject:{
         type: 'string',
         required: true
+    },
+    status:{
+        type:'number',
+        required: true
     }
-})
+});
+
 
 module.exports = mongoose.model('User',userSchema);
