@@ -1,9 +1,9 @@
-const Books = require('../models/book')
+const Papers = require('../models/paper')
 
-// add book controller
-exports.addBook = async (req, res) => {
-    let newBook = new Books(req.body)
-    newBook.save((err) => {
+// add Paper controller
+exports.addpaper = async (req, res) => {
+    let newPaper = new Papers(req.body)
+    newPaper.save((err) => {
         if (err) {
             return res.status(400).json({
                 error: err
@@ -11,14 +11,14 @@ exports.addBook = async (req, res) => {
         }
 
         return res.status(200).json({
-            success: 'book successfully saved'
+            success: 'Papers successfully saved'
         });
     })
 }
 
-// read books controller
-exports.readBook = async (req, res) => {
-    Books.find((err, data) => {
+// read Paper controller
+exports.readPaper = async (req, res) => {
+    Papers.find((err, data) => {
         if (err || !data) {
             return res.status(400).json({
                 error: err
@@ -32,9 +32,9 @@ exports.readBook = async (req, res) => {
 }
 
 // read book by id controller
-exports.readBookByID = async (req, res) => {
+exports.readPaperByID = async (req, res) => {
     const id = req.params.id
-    Books.findById(id, (err, data) => {
+    Papers.findById(id, (err, data) => {
         if (err || !data) {
             return res.status(400).json({
                 error: err
@@ -48,8 +48,8 @@ exports.readBookByID = async (req, res) => {
 }
 
 // update book controller and status update when book trying to delete
-exports.updateBook = async (req, res) => {
-    Books.findByIdAndUpdate(
+exports.updatePaper = async (req, res) => {
+    Papers.findByIdAndUpdate(
         req.params.id,
         {
             $set: req.body
@@ -61,9 +61,8 @@ exports.updateBook = async (req, res) => {
                 });
             }
             return res.status(200).json({
-                success: 'book successfully updated'
+                success: 'Papers successfully updated'
             });
         }
     );
 }
-

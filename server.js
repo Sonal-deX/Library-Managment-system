@@ -23,14 +23,14 @@ const DB_URL = process.env.DB_URL
 
 // db connection
 mongoose.connect(DB_URL)
-    .then(()=>{
+    .then(() => {
         console.log("db connection success");
     })
-    .catch(()=>{
+    .catch(() => {
         console.log("db connection error");
     })
 
 // server start
-app.listen(PORT,()=>{
+app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);
 })

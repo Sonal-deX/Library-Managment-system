@@ -1,44 +1,51 @@
 const mongoose = require('mongoose');
-const UHB = require('./userHasbook')
 
 const userSchema = new mongoose.Schema({
-    admissionNo:{
+    admissionNo: {
         type: 'number',
         required: true,
         unique: true
     },
-    userType:{
+    email:{
+        type:'string',
+        trim: true,
+        lowercase:true
+    },
+    userType: {
         type: 'string',
         required: true,
-        enum:["student","teacher","admin"]
+        enum: ["student", "teacher", "admin"]
     },
-    name:{
+    name: {
         type: 'string',
         required: true,
+        lowercase:true
     },
-    grade:{
+    grade: {
         type: 'number',
         required: true,
-        enum:[0,1,2,3,4,5,6,7,8,9,10,11,12,13]
+        enum: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
     },
-    class:{
+    class: {
         type: 'string',
         required: true,
-        enum:['NULL','A','B','C','D','E','F','G']
+        enum: ['NULL', 'A', 'B', 'C', 'D', 'E', 'F', 'G']
     },
-    contactNo:{
+    contactNo: {
         type: 'number',
         required: true,
     },
-    subject:{
+    subject: {
         type: 'string',
-        required: true
+        required: true,
+        lowercase:true
     },
-    status:{
-        type:'number',
-        required: true
+    status: {
+        type: 'number',
+        required: true,
+        enum: [1, 2]
     }
 });
 
 
-module.exports = mongoose.model('User',userSchema);
+module.exports = mongoose.model('User', userSchema);

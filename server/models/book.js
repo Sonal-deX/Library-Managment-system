@@ -1,40 +1,56 @@
 const mongoose = require('mongoose');
-const UHB = require('./userHasbook')
 
 const bookSchema = new mongoose.Schema({
-    bookId:{
+    bookId: {
         type: 'number',
         required: true,
         unique: true
     },
-    name:{
+    title: {
         type: 'string',
         required: true,
+        lowercase:true
     },
     author: {
         type: 'string',
         required: true,
+        lowercase:true
     },
-    description:{
+    description: {
         type: 'string',
+        lowercase:true
     },
-    language:{
+    language: {
         type: 'string',
+        required: true,
+        lowercase:true
+    },
+    category: {
+        type: 'string',
+        required: true,
+        lowercase:true
+    },
+    img: {
+        url: 'string',
+        filename: 'string'
+    },
+    qty:{
+        type: 'number',
         required: true
     },
-    category:{
-        type: 'string',
-        required: true
+    availability: {
+        type: 'number',
+        required: true,
+        enum:[1,2]
     },
-    img:{
-        url:'string',
-        filename:'string'
-    },
-    status:{
-        type:'number',
-        required: true
+    status: {
+        // for deletetion activities
+        type: 'number',
+        required: true,
+        enum: [1, 2]
+        
     }
 })
 
 
-module.exports = mongoose.model('Book',bookSchema);
+module.exports = mongoose.model('Book', bookSchema);
