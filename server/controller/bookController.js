@@ -9,7 +9,6 @@ exports.addBook = async (req, res) => {
                 error: err
             });
         }
-
         return res.status(200).json({
             success: 'book successfully saved'
         });
