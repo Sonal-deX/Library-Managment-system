@@ -2,14 +2,17 @@ import React, { useState } from "react";
 import { Box } from "@mui/material";
 import { grey } from '@mui/material/colors'
 import { Grid } from "@mui/material";
-import { Button } from "@mui/material";
-import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
+
+
 import FilterListIcon from '@mui/icons-material/FilterList';
 import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
 import DeleteIcon from '@mui/icons-material/Delete';
-import VisibilityIcon from '@mui/icons-material/Visibility';
+
+import CircleIcon from '@mui/icons-material/Circle';
 import { green, yellow, red, blue } from "@mui/material/colors";
 
+import ViewBookModal from "./viewBook";
+import AddBookModal from "./addBook";
 
 import axios from 'axios'
 
@@ -29,6 +32,7 @@ import { useEffect } from "react";
 
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+
 
 
 // for searchbar
@@ -77,60 +81,88 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 // main function
 function Books() {
 
-    // dropDown 
+    const [addBook, setaddbook] = React.useState()
+    const addbookReload = (value) => {
+        setaddbook(value)
+    }
+
+    // for dropDown 
+    const [count, setCount] = React.useState("74.5vh")
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const [search, setSearch] = React.useState([]);
+    const [x, setX] = React.useState(1);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
-    const handleClose = (e) => {
+    const handleClose = () => {
         setAnchorEl(null);
-        console.log(e.target.textContent);
     };
-   
+    const filterData = (book, key) => {
+        const result = book.filter((book) => {
+            return book.availability == key
+        })
+        if (result.length < 10) { setCount(`7+7*${result.length}`) }
+        if (result.length >= 10) { setCount('74.5vh') }
+
+
+        if (key.length == 0) { setCount('74.5vh') }
+        setData(result)
+        setSearch(result)
+        setX(key)
+
+    };
+    const filterHandler = (e) => {
+        setAnchorEl(null)
+        let filterkey = e.currentTarget.textContent
+        filterkey = filterkey == "Available" ? 1 : 2
+        axios.get("http://localhost:8000/book")
+            .then(res => {
+                filterData(res.data.data, filterkey)
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
     // 
 
 
     // axios data load and pagination
     const [data, setData] = useState([])
     useEffect(() => {
+        setaddbook(true)
         axios.get('http://localhost:8000/book')
             .then(res => {
                 setData(res.data.data)
+                filterData(res.data.data, 1)
             })
             .catch(err => {
                 console.log(err);
             })
-    }, [])
-    
+    }, [addBook])
+
 
     // for search
-    const [count,setCount] = React.useState("74.5vh")
-    const filterData = (books, searchKey) => {
+    const searchData = (books, searchKey) => {
         searchKey = searchKey.toLowerCase()
         const result = books.filter((book) =>
             book.title.includes(searchKey)
         )
-        if(result.length<10){
-            setCount(`7+7*${result.length}`)
-        }
-        if(searchKey.length==0){setCount('74.5vh')}
+        if (result.length < 10) { setCount(`7+7*${result.length}`) }
+        if (result.length < 10 && searchKey.length == 0) { setCount(`7+7*${result.length}`) }
+        if (result.length > 10 && searchKey.length == 0) { { setCount('74.5vh') } }
+        if (result.length > 10) { { setCount('74.5vh') } }
+
         setData(result)
     }
 
     const searchHandler = (e) => {
         const searchkey = e.currentTarget.value
-        axios.get("http://localhost:8000/book")
-            .then(res => {
-                filterData(res.data.data, searchkey)
-            })
-            .catch(err => {
-                console.log(err);
-            })
+        searchData(search, searchkey)
     }
     // 
 
-    // before paginate
+    // table body
     const allData = data.map((data, index) => {
         return (
             <TableRow key={index}>
@@ -138,22 +170,10 @@ function Books() {
                 <TableCell align="left">{data.title}</TableCell>
                 <TableCell align="right">{data.author}</TableCell>
                 <TableCell align="right">{data.qty}</TableCell>
-                <TableCell align="right">{data.availability}</TableCell>
-                <TableCell align="right">{data.status}</TableCell>
+                <TableCell align="center"><CircleIcon fontSize="small" sx={{ height: '10px', color: data.availability == 1 ? 'green' : 'red' }} /></TableCell>
                 <TableCell align="right" sx={{ paddingY: 0 }}>
                     <Grid container>
-                        <Grid item xs={4} ><VisibilityIcon
-                            sx={{
-                                border: 1,
-                                borderColor: 'black',
-                                padding: '5px',
-                                borderRadius: '50px',
-                                bgcolor: blue[400],
-                                "&:hover": {
-                                    cursor: 'pointer'
-                                }
-                            }} />
-                        </Grid>
+                        <Grid item xs={4} ><ViewBookModal /></Grid>
                         <Grid item xs={4} ><ModeEditOutlineIcon
                             sx={{
                                 border: 1,
@@ -194,20 +214,7 @@ function Books() {
             <Box sx={{ paddingX: "20px", paddingTop: '20px' }}>
                 <Grid container>
                     <Grid item xs={4} sx={{ display: "flex", alignItems: 'center' }}>
-                        <Button
-                            sx={{
-                                bgcolor: green[200],
-                                padding: "10px",
-                                height: '50px',
-                                border: 1,
-                                borderColor:
-                                    green[900],
-                                color: green[900],
-                                "&:hover": { bgcolor: green[100] }
-                            }}>
-                            &nbsp;&nbsp;&nbsp;<LibraryAddIcon />&nbsp;&nbsp;&nbsp;
-                            Add Book&nbsp;&nbsp;&nbsp;
-                        </Button>
+                        <AddBookModal addbookReload={addbookReload} />
                     </Grid>
                     <Grid item xs={8}></Grid>
                 </Grid>
@@ -244,9 +251,9 @@ function Books() {
             </Toolbar>
 
 
-            {/* table and paginator */}
+            {/* table */}
             <Box sx={{ marginX: '80px' }}>
-                <TableContainer component={Paper} sx={{height:count}}>
+                <TableContainer component={Paper} sx={{ height: count }}>
                     <Table sx={{ minWidth: 650 }} aria-label="caption table">
                         <TableHead>
                             <TableRow sx={{ bgcolor: green[200] }}>
@@ -254,8 +261,7 @@ function Books() {
                                 <TableCell sx={{ color: green[900] }}>Book Title</TableCell>
                                 <TableCell align="right" sx={{ color: green[900] }}>Author</TableCell>
                                 <TableCell align="right" sx={{ color: green[900] }}>Quantity</TableCell>
-                                <TableCell align="right" sx={{ color: green[900] }}>Availability</TableCell>
-                                <TableCell align="right" sx={{ color: green[900] }}>Status</TableCell>
+                                <TableCell align="center" sx={{ color: green[900] }}>Availability</TableCell>
                                 <TableCell align="right" sx={{ color: green[900] }}>Actions</TableCell>
                             </TableRow>
                         </TableHead>
@@ -265,7 +271,7 @@ function Books() {
                     </Table>
                 </TableContainer>
 
-               
+
             </Box>
 
             {/* filter menu */}
@@ -278,8 +284,8 @@ function Books() {
                     'aria-labelledby': 'basic-button',
                 }}
             >
-                <MenuItem onClick={handleClose}>Availability</MenuItem>
-                <MenuItem onClick={handleClose}>Status</MenuItem>
+                <MenuItem sx={{ bgcolor: x == 1 ? grey[300] : 'white' }} onClick={filterHandler}>Available</MenuItem>
+                <MenuItem sx={{ bgcolor: x == 2 ? grey[300] : 'white' }} onClick={filterHandler}>Not Available </MenuItem>
             </Menu>
 
         </Box>
