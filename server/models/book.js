@@ -31,8 +31,8 @@ const bookSchema = new mongoose.Schema({
         lowercase:true
     },
     img: {
-        url: 'string',
-        filename: 'string'
+        type: 'string',
+        required: true
     },
     qty:{
         type: 'number',

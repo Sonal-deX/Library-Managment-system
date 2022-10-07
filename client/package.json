@@ -42,5 +42,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.21",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0"
   }
 }

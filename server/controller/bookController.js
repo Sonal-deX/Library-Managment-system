@@ -1,18 +1,33 @@
 const Books = require('../models/book')
+const cloudinary = require('cloudinary').v2;
+
+cloudinary.config({
+    cloud_name: 'dvn2f46xi',
+    api_key: '938135774233877',
+    api_secret: '25cGvp-gjQDpicalX7dYPYmpRzc'
+})
 
 // add book controller
 exports.addBook = async (req, res) => {
-    let newBook = new Books(req.body)
-    newBook.save((err) => {
-        if (err) {
-            return res.status(400).json({
-                error: err
+    try {
+        const imgUplaod = req.body.img
+        const imgResponse = await cloudinary.uploader.upload(imgUplaod, { upload_preset: 'dgwb1u7a' })
+        let newBook = new Books(req.body)
+        newBook.status = 1
+        newBook.availability = 1
+        newBook.img = imgResponse.public_id
+        newBook.save((err) => {
+            if (err) {
+                return res.status(400).json({
+                    error: err
+                });
+            }
+            return res.status(200).json({
+                success: 'book successfully saved'
             });
-        }
-        return res.status(200).json({
-            success: 'book successfully saved'
-        });
-    })
+        })
+    }
+    catch(err){console.log("error has occured",err);}
 }
 
 // read books controller

@@ -41,6 +41,10 @@ function AddBookModal(props) {
     const [booklanguage, setBooklanguage] = React.useState()
     const [bookqty, setBookqty] = React.useState()
 
+    const [fileInput, setfileinput] = React.useState()
+    const [prevImg, setprevimg] = React.useState()
+    const [img, setimg] = React.useState()
+
     const formHandler = (e) => {
         e.target.name == 'bookId' ? setBookid(e.target.value)
             : e.target.name == 'title' ? setBooktitle(e.target.value)
@@ -51,6 +55,16 @@ function AddBookModal(props) {
 
     }
 
+    const imgHandler = (e) => {
+        const file = e.target.files[0]
+        const reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onload = () => {
+            setprevimg(reader.result)
+            setimg(reader.result)
+    }
+    }
+
     const submitHandler = () => {
         let data = {
             bookId: bookid,
@@ -58,19 +72,19 @@ function AddBookModal(props) {
             author: bookauthor,
             language: booklanguage,
             category: bookcategory,
-            qty: bookqty
+            qty: bookqty,
+            img:img
         }
         axios.post('http://localhost:8000/book', data)
             .then((response) => {
                 if (response.data.success) {
-
+                    setOpen(false)
                 }
             })
             .catch((error) => {
                 console.log(error);
             })
         props.addbookReload(false)
-        setOpen(false)
     }
 
     return (
@@ -177,8 +191,10 @@ function AddBookModal(props) {
                                     variant="filled"
                                     onChange={formHandler} />
                             </Grid>
-                            <input onChange={formHandler} type="file" name="img" id="" style={{ backgroundColor: grey[200], padding: '10px' }} />
-                        </Grid><br />
+                            <input onChange={imgHandler} type="file" name="img" id="" style={{ backgroundColor: grey[200], padding: '10px' }} />
+                        </Grid>
+                        {prevImg && <img src={prevImg} alt="chosen" style={{height:'100px',marginTop:'5px',marginBottom:'10px'}}/>}
+                        <br />
                         <Button
                             variant='contained'
                             onClick={submitHandler}
@@ -193,7 +209,7 @@ function AddBookModal(props) {
                     </Box>
                 </Fade>
             </Modal>
-        </div>
+        </div >
     );
 }
 

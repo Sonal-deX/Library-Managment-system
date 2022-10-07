@@ -32,8 +32,9 @@ module.exports.bookValidation = (req, res, next) => {
         language: joi.string().required().escapeHTML(),
         category: joi.string().required().escapeHTML(),
         qty: joi.number().required(),
-        availability: joi.number().required(),
+        availability: joi.number(),
         status: joi.number(),
+        img: joi.string()
     })
     const { error } = schema.validate(req.body)
     if (error) {

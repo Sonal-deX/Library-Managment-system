@@ -86,6 +86,21 @@ function Books() {
         setaddbook(value)
     }
 
+    // axios data load and pagination
+    const [data, setData] = useState([])
+    useEffect(() => {
+        setaddbook(true)
+        axios.get('http://localhost:8000/book')
+            .then(res => {
+                setData(res.data.data)
+                filterData(res.data.data, 1)
+                setFilter(res.data.data)
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }, [addBook])
+
     // for dropDown 
     const [count, setCount] = React.useState("74.5vh")
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -112,34 +127,14 @@ function Books() {
         setX(key)
 
     };
+    const [filter, setFilter] = React.useState([])
     const filterHandler = (e) => {
         setAnchorEl(null)
         let filterkey = e.currentTarget.textContent
         filterkey = filterkey == "Available" ? 1 : 2
-        axios.get("http://localhost:8000/book")
-            .then(res => {
-                filterData(res.data.data, filterkey)
-            })
-            .catch(err => {
-                console.log(err);
-            })
+        filterData(filter, filterkey)
     }
     // 
-
-
-    // axios data load and pagination
-    const [data, setData] = useState([])
-    useEffect(() => {
-        setaddbook(true)
-        axios.get('http://localhost:8000/book')
-            .then(res => {
-                setData(res.data.data)
-                filterData(res.data.data, 1)
-            })
-            .catch(err => {
-                console.log(err);
-            })
-    }, [addBook])
 
 
     // for search
