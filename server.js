@@ -34,8 +34,8 @@ mongoose.connect(DB_URL)
     .then(() => {
         console.log("db connection success");
     })
-    .catch(() => {
-        console.log("db connection error");
+    .catch((err) => {
+        console.log(err);
     })
 
 // server start
