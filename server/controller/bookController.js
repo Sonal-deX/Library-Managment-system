@@ -16,11 +16,13 @@ exports.addBook = async (req, res) => {
         newBook.status = 1
         newBook.availability = 1
         newBook.img = imgResponse.public_id
-        newBook.save((err) => {
+        newBook.save(async (err) => {
             if (err) {
+                const imgDelete = await cloudinary.uploader.destroy(imgResponse.public_id)
                 return res.status(400).json({
                     error: err
                 });
+               
             }
             return res.status(200).json({
                 success: 'book successfully saved'

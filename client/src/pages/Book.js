@@ -19,7 +19,7 @@ import {
   TableContainer,
   TablePagination,
 } from '@mui/material';
-import { green,grey } from '@mui/material/colors';
+import { green, grey } from '@mui/material/colors';
 // components
 import Page from '../components/Page';
 import Label from '../components/Label';
@@ -81,7 +81,14 @@ export default function Book() {
   const [seacrhData, setSeacrhData] = useState([])
   const [searchKey, setSearchKey] = useState()
 
+  const [bookReload, setBookReload] = useState()
+
+  const addbookReload = (value) => {
+    setBookReload(value)
+  }
+
   useEffect(() => {
+    setBookReload(true)
     axios.get("http://localhost:8000/book")
       .then(res => {
         setBook(res.data.data)
@@ -90,7 +97,8 @@ export default function Book() {
       .catch(err => {
         console.log(err);
       })
-  }, [])
+  }, [bookReload])
+
 
   const [page, setPage] = useState(0);
 
@@ -141,11 +149,11 @@ export default function Book() {
     <Page title="User">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-          <Typography variant="h3" sx={{color:green[600]}}>
+          <Typography variant="h3" sx={{ color: green[600] }}>
             Book
           </Typography>
 
-          <BookModal />
+          <BookModal bookReload={addbookReload} />
 
         </Stack>
 
