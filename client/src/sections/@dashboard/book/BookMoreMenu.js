@@ -1,15 +1,24 @@
 import { useRef, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+import BookUpdateModal from './BookUpdateModal';
 // material
-import { Menu, MenuItem, IconButton, ListItemIcon, ListItemText } from '@mui/material';
+import { Menu, MenuItem, IconButton, ListItemIcon, ListItemText, Typography } from '@mui/material';
 // component
 import Iconify from '../../../components/Iconify';
 
+
 // ----------------------------------------------------------------------
 
-export default function UserMoreMenu() {
+export default function BookMoreMenu(props) {
+
+  const book = props.selectedBook;
+
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
+
+  const closeHandler = (value)=>{
+    setIsOpen(value)
+  }
 
   return (
     <>
@@ -34,12 +43,13 @@ export default function UserMoreMenu() {
           <ListItemText  primary="Delete" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
 
-        <MenuItem component={RouterLink} to="#" sx={{ color: 'text.secondary' }}>
-          <ListItemIcon>
+          <BookUpdateModal onClose={closeHandler} book={book} bookReload={props.bookReload} />
+
+          {/* <ListItemIcon>
             <Iconify sx={{color:'orange'}} icon="eva:edit-fill" width={24} height={24} />
           </ListItemIcon>
-          <ListItemText  primary="Edit" primaryTypographyProps={{ variant: 'body2' }} />
-        </MenuItem>
+          <ListItemText  primary="Edit" primaryTypographyProps={{ variant: 'body2' }} /> */}
+        
       </Menu>
     </>
   );

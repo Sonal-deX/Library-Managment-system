@@ -12,7 +12,7 @@ import Iconify from '../../../components/Iconify';
 import { maxWidth } from '@mui/system';
 import axios from 'axios';
 
-
+import { Menu, MenuItem, IconButton, ListItemIcon, ListItemText } from '@mui/material';
 
 const theme = createTheme({
     palette: {
@@ -38,10 +38,9 @@ const style = {
 
 };
 
-export default function TransitionsModal(props) {
+export default function BookUpdateModal(props) {
 
-    const [duplicateKeyError, setDuplicateKeyError] = React.useState();
-    const [field, setField] = React.useState();
+   
 
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
@@ -54,7 +53,7 @@ export default function TransitionsModal(props) {
     const [booklanguage, setBooklanguage] = React.useState()
     const [bookqty, setBookqty] = React.useState()
 
-    const [fileInput, setfileinput] = React.useState()
+    const [updatePrevimg, setupdatePrevimg] = React.useState()
     const [prevImg, setprevimg] = React.useState()
     const [img, setimg] = React.useState()
 
@@ -67,6 +66,24 @@ export default function TransitionsModal(props) {
                             : setBookauthor(e.target.value)
 
     }
+
+    React.useEffect(() => {
+        if (props.book.img) {
+            setprevimg(`https://res.cloudinary.com/dvn2f46xi/image/upload/v1665732359/${props.book.img}`)
+            setimg(props.book.img)
+            setupdatePrevimg(props.book.img)
+        } else {
+            setprevimg(`https://res.cloudinary.com/dvn2f46xi/image/upload/v1665768651/library/No-Image-Placeholder.svg_lnp07f.png`)
+            setupdatePrevimg('null')
+        }
+        setBookid(props.book.bookId)
+        setBooktitle(props.book.title)
+        setBookauthor(props.book.author)
+        setBookcategory(props.book.category)
+        setBooklanguage(props.book.language)
+        setBookqty(props.book.qty)
+
+    }, [])
 
     const imgHandler = (e) => {
         const file = e.target.files[0]
@@ -86,12 +103,13 @@ export default function TransitionsModal(props) {
             language: booklanguage,
             category: bookcategory,
             qty: bookqty,
-            img: [img,'null']
+            img: [img,updatePrevimg]
         }
-        axios.post('http://localhost:8000/book', data)
+        axios.put(`http://localhost:8000/book/update/${props.book._id}`, data)
             .then((response) => {
                 if (response.data.success) {
                     setOpen(false)
+                    props.onClose(false)
                     props.bookReload(false)
                 }
             })
@@ -103,7 +121,15 @@ export default function TransitionsModal(props) {
 
     return (
         <div>
-            <Button variant="contained" sx={{ bgcolor: green[600], ":hover": { bgcolor: green[700] } }} startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleOpen}>New Book</Button>
+
+            <MenuItem onClick={handleOpen} component={RouterLink} to="#" sx={{ color: 'text.secondary' }}>
+                <ListItemIcon>
+                    <Iconify sx={{ color: 'orange' }} icon="eva:edit-fill" width={24} height={24} />
+                </ListItemIcon>
+                <ListItemText primary="Edit" primaryTypographyProps={{ variant: 'body2' }} />
+            </MenuItem>
+
+            {/* <Button variant="contained" sx={{ bgcolor: green[600], ":hover": { bgcolor: green[700] } }} startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleOpen}>New Book</Button> */}
 
             <Modal
                 aria-labelledby="transition-modal-title"
@@ -130,13 +156,14 @@ export default function TransitionsModal(props) {
 
                             <TextField
                                 name='bookId'
-                                sx={{ paddingBottom: duplicateKeyError ? '' : '10px' }}
+                                sx={{ paddingBottom:'10px' }}
                                 color="primary"
                                 helperText="Enter ID of the Book"
                                 fullWidth
                                 id="filled-basic"
                                 label="Book ID"
                                 onChange={formHandler}
+                                defaultValue={props.book.bookId}
                             />
 
                             <TextField
@@ -147,7 +174,10 @@ export default function TransitionsModal(props) {
                                 fullWidth
                                 id="filled-basic"
                                 label="Book Title"
-                                onChange={formHandler} />
+                                onChange={formHandler}
+                                defaultValue={props.book.title}
+                            />
+
 
                             <TextField
                                 name='author'
@@ -157,7 +187,9 @@ export default function TransitionsModal(props) {
                                 fullWidth
                                 id="filled-basic"
                                 label="Book Author"
-                                onChange={formHandler} />
+                                onChange={formHandler}
+                                defaultValue={props.book.author}
+                            />
 
                             <TextField
                                 name='category'
@@ -167,7 +199,9 @@ export default function TransitionsModal(props) {
                                 fullWidth
                                 id="filled-basic"
                                 label="Book Category"
-                                onChange={formHandler} />
+                                onChange={formHandler}
+                                defaultValue={props.book.category}
+                            />
 
                             <Grid container>
                                 <Grid item xs={5}>
@@ -178,7 +212,9 @@ export default function TransitionsModal(props) {
                                         helperText="Enter Language of the Book"
                                         fullWidth id="filled-basic"
                                         label="Book Language"
-                                        onChange={formHandler} />
+                                        onChange={formHandler}
+                                        defaultValue={props.book.language}
+                                    />
                                 </Grid>
                                 <Grid item xs={1} />
                                 <Grid item xs={6}>
@@ -190,11 +226,13 @@ export default function TransitionsModal(props) {
                                         fullWidth
                                         id="filled-basic"
                                         label="Book Quantity"
-                                        onChange={formHandler} />
+                                        onChange={formHandler}
+                                        defaultValue={props.book.qty}
+                                    />
                                 </Grid>
                                 <input onChange={imgHandler} type="file" name="img" id="" style={{ backgroundColor: grey[200], padding: '10px' }} />
                             </Grid>
-                            {prevImg && <img src={prevImg} alt="chosen" style={{ height: '100px' }} />}
+                            {prevImg && <img src={prevImg} alt="chosen" style={{ height: '100px', marginTop: '2px' }} />}
                             <Button
                                 variant='contained'
                                 onClick={submitHandler}

@@ -99,7 +99,6 @@ export default function Book() {
       })
   }, [bookReload])
 
-
   const [page, setPage] = useState(0);
 
   const [order, setOrder] = useState('asc');
@@ -195,7 +194,7 @@ export default function Book() {
                           </Label>
                         </TableCell>
                         <TableCell align="right">
-                          <BookMoreMenu />
+                          <BookMoreMenu selectedBook={book} bookReload={addbookReload}/>
                         </TableCell>
                       </TableRow>
                     );

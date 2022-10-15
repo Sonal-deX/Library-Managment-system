@@ -34,7 +34,7 @@ module.exports.bookValidation = (req, res, next) => {
         qty: joi.number().required(),
         availability: joi.number(),
         status: joi.number(),
-        img: joi.string()
+        img: joi.array().items(joi.string().required(),joi.string().required())
     })
     const { error } = schema.validate(req.body)
     if (error) {
