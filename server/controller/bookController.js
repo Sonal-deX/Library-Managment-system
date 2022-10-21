@@ -65,15 +65,29 @@ exports.readBookByID = async (req, res) => {
 
 // update book controller and status update when book trying to delete
 exports.updateBook = async (req, res) => {
-    const img = req.body.img[0].includes('library')
-    const prevImg = req.body.img[1].includes('library')
-    if(!img){
-        const imgResponse = await cloudinary.uploader.upload(req.body.img[0], { upload_preset: 'dgwb1u7a' })
-        if(prevImg){
-            const imgDelete = await cloudinary.uploader.destroy(req.body.img[1])
+    const delData = req.body.status === 0
+
+    if (delData === false) {
+        const img = req.body.img[0].includes('library')
+        const prevImg = req.body.img[1].includes('library')
+        if (req.body.img[0] == req.body.img[1]) {
+            req.body.img = req.body.img[0]
         }
-        req.body.img = imgResponse.public_id
+
+        if (!img) {
+            const imgResponse = await cloudinary.uploader.upload(req.body.img[0], { upload_preset: 'dgwb1u7a' })
+            if (prevImg) {
+                const imgDelete = await cloudinary.uploader.destroy(req.body.img[1])
+            }
+            req.body.img = imgResponse.public_id
+        }
+    }else{
+        await cloudinary.uploader.destroy(req.body.img)
+        req.body.img = 'library/No-Image-Placeholder.svg_lnp07f.png'
     }
+
+
+
     Books.findByIdAndUpdate(
         req.params.id,
         {

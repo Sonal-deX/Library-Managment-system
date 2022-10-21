@@ -180,7 +180,7 @@ export default function Book() {
                       >
                         <TableCell align="left">{book.bookId}</TableCell>
                         <TableCell component="th" scope="row" >
-                          <Typography variant="subtitle2" noWrap>
+                          <Typography variant="subtitle2" sx={{cursor:'pointer'}} noWrap>
                             {book.title}
                           </Typography>
                         </TableCell>

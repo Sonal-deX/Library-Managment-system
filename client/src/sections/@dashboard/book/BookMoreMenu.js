@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import BookUpdateModal from './BookUpdateModal';
+import BookDeleteModal from './BookDeleteModal';
 // material
 import { Menu, MenuItem, IconButton, ListItemIcon, ListItemText, Typography } from '@mui/material';
 // component
@@ -16,7 +17,7 @@ export default function BookMoreMenu(props) {
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
 
-  const closeHandler = (value)=>{
+  const closeHandler = (value) => {
     setIsOpen(value)
   }
 
@@ -36,20 +37,22 @@ export default function BookMoreMenu(props) {
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <MenuItem sx={{ color: 'text.secondary' }}>
+        {/* <MenuItem sx={{ color: 'text.secondary' }}>
           <ListItemIcon>
             <Iconify sx={{color:'red'}} icon="eva:trash-2-outline" width={24} height={24} />
           </ListItemIcon>
           <ListItemText  primary="Delete" primaryTypographyProps={{ variant: 'body2' }} />
-        </MenuItem>
+        </MenuItem> */}
 
-          <BookUpdateModal onClose={closeHandler} book={book} bookReload={props.bookReload} />
 
-          {/* <ListItemIcon>
+        <BookDeleteModal onClose={closeHandler} book={book} bookReload={props.bookReload} />
+        <BookUpdateModal onClose={closeHandler} book={book} bookReload={props.bookReload} />
+
+        {/* <ListItemIcon>
             <Iconify sx={{color:'orange'}} icon="eva:edit-fill" width={24} height={24} />
           </ListItemIcon>
           <ListItemText  primary="Edit" primaryTypographyProps={{ variant: 'body2' }} /> */}
-        
+
       </Menu>
     </>
   );
