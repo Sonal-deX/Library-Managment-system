@@ -4,6 +4,8 @@ import { styled } from '@mui/material/styles';
 import { Toolbar, Tooltip, IconButton, Typography, OutlinedInput, InputAdornment } from '@mui/material';
 // component
 import Iconify from '../../../components/Iconify';
+import React from 'react';
+import {Button} from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -29,13 +31,19 @@ const SearchStyle = styled(OutlinedInput)(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-UserListToolbar.propTypes = {
-  numSelected: PropTypes.number,
-  filterName: PropTypes.string,
-  onFilterName: PropTypes.func,
-};
 
-export default function UserListToolbar({ numSelected, filterName, onFilterName }) {
+export default function UserListToolbar({ numSelected, filterName, onFilterName,clearS}) {
+  const [value,setValue] = React.useState()
+  const x = (e)=>{
+    const search = e.target.value
+    setValue(search)
+    onFilterName(search)
+  }
+
+  React.useEffect(()=>{
+    setValue()
+  },[clearS])
+
   return (
     <RootStyle
       sx={{
@@ -51,7 +59,8 @@ export default function UserListToolbar({ numSelected, filterName, onFilterName 
         </Typography>
       ) : (
         <SearchStyle
-          onChange={onFilterName}
+          onChange={x}
+          value={value || ''}
           placeholder="Search user..."
           startAdornment={
             <InputAdornment position="start">
@@ -60,6 +69,7 @@ export default function UserListToolbar({ numSelected, filterName, onFilterName 
           }
         />
       )}
+      
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
@@ -74,6 +84,7 @@ export default function UserListToolbar({ numSelected, filterName, onFilterName 
           </IconButton>
         </Tooltip>
       )}
+
     </RootStyle>
   );
 }

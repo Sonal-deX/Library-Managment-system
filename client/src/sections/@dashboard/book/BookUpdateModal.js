@@ -72,7 +72,7 @@ export default function BookUpdateModal(props) {
     }
 
     React.useEffect(() => {
-        if (props.book.img) {
+        if (props.book.img !=='null') {
             setprevimg(`https://res.cloudinary.com/dvn2f46xi/image/upload/v1665732359/${props.book.img}`)
             setimg(props.book.img)
             setupdatePrevimg(props.book.img)

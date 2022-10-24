@@ -37,9 +37,9 @@ const TABLE_HEAD = [
   { id: 'id', label: 'BookID', alignRight: false },
   { id: 'title', label: 'Title', alignRight: false },
   { id: 'author', label: 'Author', alignRight: false },
-  { id: 'lng', label: 'Language', alignRight: false },
+  { id: 'mdm', label: 'Medium', alignRight: false },
   { id: 'ctgry', label: 'Category', alignRight: false },
-  { id: 'qty', label: 'qty', alignRight: false },
+  { id: 'qty', label: 'Quantity', alignRight: false },
   { id: 'avl', label: 'Availability', alignRight: false },
   { id: '' },
 ];
@@ -80,6 +80,7 @@ export default function Book() {
   const [book, setBook] = useState([])
   const [seacrhData, setSeacrhData] = useState([])
   const [searchKey, setSearchKey] = useState()
+  const [clearSearchKey, setClearSearchKey] = useState(true)
 
   const [bookReload, setBookReload] = useState()
 
@@ -93,6 +94,7 @@ export default function Book() {
       .then(res => {
         setBook(res.data.data)
         setSeacrhData(res.data.data)
+        setClearSearchKey(!clearSearchKey)
       })
       .catch(err => {
         console.log(err);
@@ -125,6 +127,7 @@ export default function Book() {
   };
 
   const filterData = (searchKey) => {
+    setSearchKey(searchKey);
     searchKey = searchKey.toLowerCase()
     const result = book.filter((book) =>
       book.title.includes(searchKey)
@@ -132,11 +135,7 @@ export default function Book() {
     setSeacrhData(result)
   }
 
-  const handleFilterByName = (event) => {
-    const searchKey = event.target.value
-    setSearchKey(searchKey)
-    filterData(searchKey)
-  };
+ 
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - book.length) : 0;
 
@@ -149,15 +148,15 @@ export default function Book() {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h3" sx={{ color: green[600] }}>
-            Book
+            Books
           </Typography>
 
-          <BookModal bookReload={addbookReload} />
+          <BookModal bookReload={addbookReload}/>
 
         </Stack>
 
         <Card>
-          <BookListToolbar onFilterName={handleFilterByName} />
+          <BookListToolbar onFilterName={filterData} clearS={clearSearchKey} />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>

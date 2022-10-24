@@ -46,7 +46,6 @@ export default function BookUpdateModal(props) {
     const bookDeleteHandler = () => {
         props.book.status = 0
         const data = props.book
-        console.log(data);
         axios.delete(`http://localhost:8000/book/delete/${props.book._id}`, {data})
             .then((response) => {
                 if (response.data.success) {

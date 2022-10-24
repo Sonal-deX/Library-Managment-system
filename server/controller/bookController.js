@@ -83,7 +83,7 @@ exports.updateBook = async (req, res) => {
         }
     }else{
         await cloudinary.uploader.destroy(req.body.img)
-        req.body.img = 'library/No-Image-Placeholder.svg_lnp07f.png'
+        req.body.img = 'null'
     }
 
 
