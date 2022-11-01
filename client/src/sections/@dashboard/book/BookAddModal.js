@@ -1,20 +1,12 @@
 import * as React from 'react';
 import { Grid, TextField, createTheme, ThemeProvider, Card, Container, colors } from '@mui/material';
 import { green, grey } from '@mui/material/colors';
-import Backdrop from '@mui/material/Backdrop';
-import Box from '@mui/material/Box';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
-import Modal from '@mui/material/Modal';
-import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { Link as RouterLink } from 'react-router-dom';
 import Iconify from '../../../components/Iconify';
-import { maxWidth } from '@mui/system';
 import axios from 'axios';
-
-
 
 
 const theme = createTheme({
@@ -43,12 +35,7 @@ const style = {
 
 export default function TransitionsModal(props) {
 
-    const [duplicateKeyError, setDuplicateKeyError] = React.useState();
-    const [field, setField] = React.useState();
-
-    const [open, setOpen] = React.useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    
 
     const [bookid, setBookid] = React.useState()
     const [booktitle, setBooktitle] = React.useState()
@@ -57,9 +44,17 @@ export default function TransitionsModal(props) {
     const [booklanguage, setBooklanguage] = React.useState()
     const [bookqty, setBookqty] = React.useState()
 
-    const [fileInput, setfileinput] = React.useState()
     const [prevImg, setprevimg] = React.useState()
     const [img, setimg] = React.useState()
+
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => {
+        setOpen(true)
+    };
+    const handleClose = () => {
+        setOpen(false)
+        setprevimg()
+    };
 
     const formHandler = (e) => {
         e.target.name === 'bookId' ? setBookid(e.target.value)
@@ -95,8 +90,7 @@ export default function TransitionsModal(props) {
             .then((response) => {
                 if (response.data.success) {
                     setOpen(false)
-                    props.bookReload(false)
-                    setprevimg()
+                    props.bookReload(false) 
                 }
             })
             .catch((error) => {
@@ -108,7 +102,7 @@ export default function TransitionsModal(props) {
     return (
         <div>
             <Button variant="contained" sx={{ bgcolor: green[600], ":hover": { bgcolor: green[700] } }} startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleOpen}>New Book</Button>
-            
+
             <Dialog
                 open={open}
                 onClose={handleClose}
@@ -126,7 +120,7 @@ export default function TransitionsModal(props) {
 
                         <TextField
                             name='bookId'
-                            sx={{ paddingBottom: duplicateKeyError ? '' : '10px' }}
+                            sx={{ paddingBottom: '10px' }}
                             color="primary"
                             helperText="Enter ID of the Book"
                             fullWidth

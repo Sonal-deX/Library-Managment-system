@@ -18,6 +18,7 @@ import {
   Typography,
   TableContainer,
   TablePagination,
+  capitalize
 } from '@mui/material';
 import { green, grey } from '@mui/material/colors';
 // components
@@ -26,7 +27,7 @@ import Label from '../components/Label';
 import Scrollbar from '../components/Scrollbar';
 import Iconify from '../components/Iconify';
 import SearchNotFound from '../components/SearchNotFound';
-import { BookListHead, BookListToolbar, BookMoreMenu, BookModal } from '../sections/@dashboard/book';
+import { BookListHead, BookListToolbar, BookMoreMenu, BookModal,BookViewModal } from '../sections/@dashboard/book';
 
 // mock
 import USERLIST from '../_mock/user';
@@ -89,6 +90,7 @@ export default function Book() {
   }
 
   useEffect(() => {
+    
     setBookReload(true)
     axios.get("http://localhost:8000/book")
       .then(res => {
@@ -130,18 +132,20 @@ export default function Book() {
     setSearchKey(searchKey);
     searchKey = searchKey.toLowerCase()
     const result = book.filter((book) =>
-      book.title.includes(searchKey)
+      book.title.toLowerCase().includes(searchKey)
     )
     setSeacrhData(result)
   }
 
- 
+
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - book.length) : 0;
 
   const books = applySortFilter(seacrhData, getComparator(order, orderBy), filterName);
 
   const isUserNotFound = books.length === 0;
+
+
 
   return (
     <Page title="User">
@@ -151,7 +155,7 @@ export default function Book() {
             Books
           </Typography>
 
-          <BookModal bookReload={addbookReload}/>
+          <BookModal bookReload={addbookReload} />
 
         </Stack>
 
@@ -179,8 +183,8 @@ export default function Book() {
                       >
                         <TableCell align="left">{book.bookId}</TableCell>
                         <TableCell component="th" scope="row" >
-                          <Typography variant="subtitle2" sx={{cursor:'pointer'}} noWrap>
-                            {book.title}
+                          <Typography variant="subtitle2" sx={{ cursor: 'pointer' }} noWrap>
+                            <BookViewModal title={book.title} data={book}/>
                           </Typography>
                         </TableCell>
                         <TableCell align="left">{book.author}</TableCell>
@@ -193,7 +197,7 @@ export default function Book() {
                           </Label>
                         </TableCell>
                         <TableCell align="right">
-                          <BookMoreMenu selectedBook={book} bookReload={addbookReload}/>
+                          <BookMoreMenu selectedBook={book} bookReload={addbookReload} />
                         </TableCell>
                       </TableRow>
                     );

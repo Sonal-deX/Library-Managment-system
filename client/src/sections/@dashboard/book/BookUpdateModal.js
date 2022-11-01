@@ -60,6 +60,7 @@ export default function BookUpdateModal(props) {
     const [updatePrevimg, setupdatePrevimg] = React.useState()
     const [prevImg, setprevimg] = React.useState()
     const [img, setimg] = React.useState()
+    const [checkImg,setcheckImg] = React.useState()
 
     const formHandler = (e) => {
         e.target.name === 'bookId' ? setBookid(e.target.value)
@@ -94,9 +95,16 @@ export default function BookUpdateModal(props) {
         const reader = new FileReader()
         reader.readAsDataURL(file)
         reader.onload = () => {
+            const imgCheck = reader.result.includes('video')
+            if(imgCheck === true) {
+                console.log("not an image");
+            }
             setprevimg(reader.result)
             setimg(reader.result)
         }
+        
+        
+        
     }
 
     const submitHandler = () => {
@@ -145,7 +153,7 @@ export default function BookUpdateModal(props) {
                         <Typography
                             variant='h4'
                             sx={{ paddingBottom: '10px', color: green[600] }}>
-                            Add Book
+                            Edit Book
                         </Typography>
 
                         <TextField

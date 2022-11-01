@@ -8,27 +8,22 @@ const bookSchema = new mongoose.Schema({
     },
     title: {
         type: 'string',
-        required: true,
-        lowercase:true
+        required: true, 
     },
     author: {
         type: 'string',
-        required: true,
-        lowercase:true
+        required: true,  
     },
     description: {
-        type: 'string',
-        lowercase:true
+        type: 'string',  
     },
     language: {
         type: 'string',
-        required: true,
-        lowercase:true
+        required: true,  
     },
     category: {
         type: 'string',
         required: true,
-        lowercase:true
     },
     img: {
         type: 'string',
@@ -47,8 +42,7 @@ const bookSchema = new mongoose.Schema({
         // for deletetion activities
         type: 'number',
         required: true,
-        enum: [1, 2]
-        
+        enum: [1, 2] 
     }
 })
 

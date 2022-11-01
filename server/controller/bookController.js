@@ -65,7 +65,10 @@ exports.readBookByID = async (req, res) => {
 
 // update book controller and status update when book trying to delete
 exports.updateBook = async (req, res) => {
-    const delData = req.body.status === 0
+    if(req.body.img[0].includes('video')){
+        console.log("dedeewqwqd");
+    }
+    const delData = req.body.status === 2
 
     if (delData === false) {
         const img = req.body.img[0].includes('library')
