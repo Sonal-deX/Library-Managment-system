@@ -26,7 +26,9 @@ import Label from '../components/Label';
 import Scrollbar from '../components/Scrollbar';
 import Iconify from '../components/Iconify';
 import SearchNotFound from '../components/SearchNotFound';
-import { BookListHead, BookListToolbar, BookMoreMenu, BookModal } from '../sections/@dashboard/book';
+import { BookListHead } from '../sections/@dashboard/book';
+import { PaperAddModal } from 'src/sections/@dashboard/paper';
+import { BookListToolbar } from '../sections/@dashboard/book';
 
 // mock
 import USERLIST from '../_mock/user';
@@ -35,11 +37,11 @@ import USERLIST from '../_mock/user';
 
 const TABLE_HEAD = [
   { id: 'id', label: 'PaperID', alignRight: false },
-  { id: 'title', label: 'Title', alignRight: false },
-  { id: 'grade', label: 'Grade', alignRight: false },
-  { id: 'mdm', label: 'Medium', alignRight: false },
+  // { id: 'title', label: 'Title', alignRight: false },
   { id: 'subject', label: 'Subject', alignRight: false },
   { id: 'year', label: 'Year', alignRight: false },
+  { id: 'grade', label: 'Grade', alignRight: false },
+  { id: 'language', label: 'Language', alignRight: false },
   { id: 'qty', label: 'Quantity', alignRight: false },
   { id: 'avl', label: 'Availability', alignRight: false },
   { id: '' },
@@ -78,27 +80,28 @@ function applySortFilter(array, comparator, query) {
 
 export default function Book() {
 
-  const [book, setBook] = useState([])
+  const [Paper, setPaper] = useState([])
   const [seacrhData, setSeacrhData] = useState([])
   const [searchKey, setSearchKey] = useState()
+  const [clearSearchKey, setClearSearchKey] = useState(true)
+  const [paperReload, setPaperReload] = useState()
 
-  const [bookReload, setBookReload] = useState()
-
-  const addbookReload = (value) => {
-    setBookReload(value)
+  const addpaperReload = (value) => {
+    setPaperReload(value)
   }
 
   useEffect(() => {
-    setBookReload(true)
-    axios.get("http://localhost:8000/book")
+    setPaperReload(true)
+    axios.get("http://localhost:8000/paper")
       .then(res => {
-        setBook(res.data.data)
+        setPaper(res.data.data)
         setSeacrhData(res.data.data)
+        setClearSearchKey(!clearSearchKey)
       })
       .catch(err => {
         console.log(err);
       })
-  }, [bookReload])
+  }, [paperReload])
 
   const [page, setPage] = useState(0);
 
@@ -111,9 +114,9 @@ export default function Book() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === 'title' && order === 'asc';
+    const isAsc = orderBy === 'year' && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy('title');
+    setOrderBy('year');
   };
 
   const handleChangePage = (event, newPage) => {
@@ -127,8 +130,8 @@ export default function Book() {
 
   const filterData = (searchKey) => {
     searchKey = searchKey.toLowerCase()
-    const result = book.filter((book) =>
-      book.title.includes(searchKey)
+    const result = Paper.filter((paper) =>
+      paper.subject.toLowerCase().includes(searchKey) || paper.grade.toString().includes(searchKey)
     )
     setSeacrhData(result)
   }
@@ -139,11 +142,11 @@ export default function Book() {
     filterData(searchKey)
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - book.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - Paper.length) : 0;
 
-  const books = applySortFilter(seacrhData, getComparator(order, orderBy), filterName);
+  const papers = applySortFilter(seacrhData, getComparator(order, orderBy), filterName);
 
-  const isUserNotFound = books.length === 0;
+  const isUserNotFound = papers.length === 0;
 
   return (
     <Page title="User">
@@ -153,12 +156,12 @@ export default function Book() {
             Papers
           </Typography>
 
-          <BookModal bookReload={addbookReload} />
+          <PaperAddModal paperReload={addpaperReload} />
 
         </Stack>
 
         <Card>
-          <BookListToolbar onFilterName={handleFilterByName} />
+          <BookListToolbar onFilterName={filterData} clearS={clearSearchKey} />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
@@ -167,35 +170,31 @@ export default function Book() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={books.length}
+                  rowCount={papers.length}
                   onRequestSort={handleRequestSort}
                 />
                 <TableBody>
-                  {books.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((book, index) => {
+                  {papers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((paper, index) => {
 
                     return (
                       <TableRow
                         hover
-                        key={book.bookId}
+                        key={paper.paperId}
                         tabIndex={-1}
                       >
-                        <TableCell align="left">{book.bookId}</TableCell>
-                        <TableCell component="th" scope="row" >
-                          <Typography variant="subtitle2" sx={{cursor:'pointer'}} noWrap>
-                            {book.title}
-                          </Typography>
-                        </TableCell>
-                        <TableCell align="left">{book.author}</TableCell>
-                        <TableCell align="left">{book.language}</TableCell>
-                        <TableCell align="left">{book.category}</TableCell>
-                        <TableCell align="left">{book.qty}</TableCell>
+                        <TableCell align="left">{paper.paperId}</TableCell>
+                        <TableCell align="left">{paper.subject}</TableCell>
+                        <TableCell align="left">{paper.year}</TableCell>
+                        <TableCell align="left">{paper.grade}</TableCell>
+                        <TableCell align="left">{paper.language}</TableCell>
+                        <TableCell align="left">{paper.qty}</TableCell>
                         <TableCell align="left">
-                          <Label variant="ghost" color={(book.availability === 2 && 'error') || 'success'}>
-                            {book.availability === 1 ? sentenceCase('Available') : sentenceCase('Not Available')}
+                          <Label variant="ghost" color={(paper.availability === 2 && 'error') || 'success'}>
+                            {paper.availability === 1 ? sentenceCase('Available') : sentenceCase('Not Available')}
                           </Label>
                         </TableCell>
                         <TableCell align="right">
-                          <BookMoreMenu selectedBook={book} bookReload={addbookReload}/>
+
                         </TableCell>
                       </TableRow>
                     );
@@ -223,7 +222,7 @@ export default function Book() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={books.length}
+            count={papers.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

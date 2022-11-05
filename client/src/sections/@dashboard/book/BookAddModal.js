@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Grid, TextField, createTheme, ThemeProvider, Card, Container, colors } from '@mui/material';
+import { Grid, TextField, createTheme, ThemeProvider, Card, Container, colors, Select, MenuItem,FormControl,InputLabel, FormHelperText } from '@mui/material';
 import { green, grey } from '@mui/material/colors';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
@@ -35,14 +35,13 @@ const style = {
 
 export default function TransitionsModal(props) {
 
-    
-
     const [bookid, setBookid] = React.useState()
     const [booktitle, setBooktitle] = React.useState()
     const [bookauthor, setBookauthor] = React.useState()
     const [bookcategory, setBookcategory] = React.useState()
-    const [booklanguage, setBooklanguage] = React.useState()
+    const [booklanguage, setBooklanguage] = React.useState('')
     const [bookqty, setBookqty] = React.useState()
+    const [bookDescription, setBookDescription] = React.useState()
 
     const [prevImg, setprevimg] = React.useState()
     const [img, setimg] = React.useState()
@@ -56,13 +55,18 @@ export default function TransitionsModal(props) {
         setprevimg()
     };
 
+    const handlechange = (event) => {
+        setBooklanguage(event.target.value)
+    };
+
     const formHandler = (e) => {
         e.target.name === 'bookId' ? setBookid(e.target.value)
             : e.target.name === 'title' ? setBooktitle(e.target.value)
                 : e.target.name === 'category' ? setBookcategory(e.target.value)
                     : e.target.name === 'qty' ? setBookqty(e.target.value)
                         : e.target.name === 'language' ? setBooklanguage(e.target.value)
-                            : setBookauthor(e.target.value)
+                            : e.target.name === 'author' ? setBookauthor(e.target.value)
+                                : setBookDescription(e.target.value)
 
     }
 
@@ -84,13 +88,15 @@ export default function TransitionsModal(props) {
             language: booklanguage,
             category: bookcategory,
             qty: bookqty,
+            description: bookDescription,
             img: [img, 'null']
         }
         axios.post('http://localhost:8000/book', data)
             .then((response) => {
                 if (response.data.success) {
                     setOpen(false)
-                    props.bookReload(false) 
+                    props.bookReload(false)
+                    setprevimg(null)
                 }
             })
             .catch((error) => {
@@ -111,93 +117,121 @@ export default function TransitionsModal(props) {
             >
                 <DialogContent>
 
-                    <ThemeProvider theme={theme}>
-                        <Typography
-                            variant='h4'
-                            sx={{ paddingBottom: '10px', color: green[600] }}>
-                            Add Book
-                        </Typography>
+                    <FormControl>
+                        <ThemeProvider theme={theme}>
+                            <Typography
+                                variant='h4'
+                                sx={{ paddingBottom: '10px', color: green[600] }}>
+                                Add Book
+                            </Typography>
+                            <TextField
+                                name='bookId'
+                                sx={{ paddingBottom: '10px' }}
+                                color="primary"
+                                helperText="Enter ID of the Book"
+                                fullWidth
+                                id="filled-basic"
+                                label="Book ID*"
+                                onChange={formHandler}
+                            />
 
-                        <TextField
-                            name='bookId'
-                            sx={{ paddingBottom: '10px' }}
-                            color="primary"
-                            helperText="Enter ID of the Book"
-                            fullWidth
-                            id="filled-basic"
-                            label="Book ID"
-                            onChange={formHandler}
-                        />
+                            <TextField
+                                name='title'
+                                sx={{ paddingBottom: '10px' }}
+                                color="primary"
+                                helperText="Enter Name of the Book"
+                                fullWidth
+                                id="filled-basic"
+                                label="Book Title*"
+                                onChange={formHandler} />
 
-                        <TextField
-                            name='title'
-                            sx={{ paddingBottom: '10px' }}
-                            color="primary"
-                            helperText="Enter Name of the Book"
-                            fullWidth
-                            id="filled-basic"
-                            label="Book Title"
-                            onChange={formHandler} />
+                            <TextField
+                                name='author'
+                                sx={{ paddingBottom: '10px' }}
+                                color="primary"
+                                helperText="Enter Author of the Book"
+                                fullWidth
+                                id="filled-basic"
+                                label="Book Author*"
+                                onChange={formHandler} />
 
-                        <TextField
-                            name='author'
-                            sx={{ paddingBottom: '10px' }}
-                            color="primary"
-                            helperText="Enter Author of the Book"
-                            fullWidth
-                            id="filled-basic"
-                            label="Book Author"
-                            onChange={formHandler} />
+                            <TextField
+                                name='category'
+                                sx={{ paddingBottom: '10px' }}
+                                color="primary"
+                                helperText="Enter Category of the Book"
+                                fullWidth
+                                id="filled-basic"
+                                label="Book Category*"
+                                onChange={formHandler} />
 
-                        <TextField
-                            name='category'
-                            sx={{ paddingBottom: '10px' }}
-                            color="primary"
-                            helperText="Enter Category of the Book"
-                            fullWidth
-                            id="filled-basic"
-                            label="Book Category"
-                            onChange={formHandler} />
-
-                        <Grid container>
-                            <Grid item xs={5}>
+                            <Grid container>
+                                <Grid item xs={5}>
+                                    <FormControl fullWidth sx={{ marginBottom: '10px' }} >
+                                        <InputLabel id="demo-simple-select-label">Language</InputLabel>
+                                        <Select
+                                            labelId="demo-simple-select-label"
+                                            id="demo-simple-select"
+                                            value={booklanguage}
+                                            label="Language"
+                                            onChange={handlechange}
+                                            name='language'
+                                        >
+                                            <MenuItem value={'English'}>English</MenuItem>
+                                            <MenuItem value={'Sinhala'}>Sinhala</MenuItem>
+                                            <MenuItem value={'Tamil'}>Tamil</MenuItem>
+                                        </Select>
+                                        <FormHelperText>Select Language</FormHelperText>
+                                    </FormControl>
+                                    {/* <TextField
+                                        name='language'
+                                        sx={{ paddingBottom: '10px' }}
+                                        color="primary"
+                                        helperText="Enter Language of the Book"
+                                        fullWidth id="filled-basic"
+                                        label="Book Language*"
+                                        onChange={formHandler} /> */}
+                                </Grid>
+                                <Grid item xs={1} />
+                                <Grid item xs={6}>
+                                    <TextField
+                                        name='qty'
+                                        sx={{ paddingBottom: '10px' }}
+                                        color="primary"
+                                        helperText="Enter Quantity "
+                                        fullWidth
+                                        id="filled-basic"
+                                        label="Book Quantity*"
+                                        onChange={formHandler} />
+                                </Grid>
                                 <TextField
-                                    name='language'
+                                    name='description'
                                     sx={{ paddingBottom: '10px' }}
                                     color="primary"
-                                    helperText="Enter Language of the Book"
-                                    fullWidth id="filled-basic"
-                                    label="Book Language"
-                                    onChange={formHandler} />
-                            </Grid>
-                            <Grid item xs={1} />
-                            <Grid item xs={6}>
-                                <TextField
-                                    name='qty'
-                                    sx={{ paddingBottom: '10px' }}
-                                    color="primary"
-                                    helperText="Enter Author of the Book"
+                                    helperText="Enter Description for the Book"
                                     fullWidth
                                     id="filled-basic"
-                                    label="Book Quantity"
+                                    label="Book Description"
                                     onChange={formHandler} />
+                                <input onChange={imgHandler} value={''} type="file" name="img" id="" style={{ backgroundColor: grey[200], padding: '10px' }} />
                             </Grid>
-                            <input onChange={imgHandler} value={''} type="file" name="img" id="" style={{ backgroundColor: grey[200], padding: '10px' }} />
-                        </Grid>
-                        {prevImg && <img src={prevImg} alt="chosen" style={{ height: '100px' }} />}
-                        <Button
-                            variant='contained'
-                            onClick={submitHandler}
-                            sx={{
-                                bgcolor: green[300],
-                                border: 1,
-                                borderColor: green[900],
-                                color: green[900],
-                                "&:hover": { bgcolor: green[200] },
-                                marginTop: '10px'
-                            }}><Iconify icon="bi:send" />&nbsp; Submit
-                        </Button>
-                    </ThemeProvider>
+                            {prevImg && <img src={prevImg} alt="chosen" style={{ height: '100px',width:'100px', marginTop: '2px' }} />}
+                            <Button
+                                variant='contained'
+                                onClick={submitHandler}
+                                sx={{
+                                    bgcolor: green[300],
+                                    border: 1,
+                                    borderColor: green[900],
+                                    color: green[900],
+                                    "&:hover": { bgcolor: green[200] },
+                                    marginTop: '10px'
+                                }}><Iconify icon="bi:send" />&nbsp; Submit
+                            </Button>
+                        </ThemeProvider>
+                    </FormControl>
+
+
 
 
                 </DialogContent>

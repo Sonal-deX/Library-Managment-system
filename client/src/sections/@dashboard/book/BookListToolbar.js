@@ -5,7 +5,7 @@ import { Toolbar, Tooltip, IconButton, Typography, OutlinedInput, InputAdornment
 // component
 import Iconify from '../../../components/Iconify';
 import React from 'react';
-import {Button} from '@mui/material';
+import { Button } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -32,17 +32,17 @@ const SearchStyle = styled(OutlinedInput)(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 
-export default function UserListToolbar({ numSelected, filterName, onFilterName,clearS}) {
-  const [value,setValue] = React.useState()
-  const x = (e)=>{
+export default function UserListToolbar({ numSelected, filterName, onFilterName, clearS }) {
+  const [value, setValue] = React.useState()
+  const x = (e) => {
     const search = e.target.value
     setValue(search)
     onFilterName(search)
   }
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
     setValue()
-  },[clearS])
+  }, [clearS])
 
   return (
     <RootStyle
@@ -69,21 +69,15 @@ export default function UserListToolbar({ numSelected, filterName, onFilterName,
           }
         />
       )}
-      
 
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton>
-            <Iconify icon="eva:trash-2-fill" />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <Iconify icon="ic:round-filter-list" />
-          </IconButton>
-        </Tooltip>
-      )}
+
+
+      <Tooltip title="Filter list">
+        <IconButton>
+          <Iconify icon="ic:round-filter-list" />
+        </IconButton>
+      </Tooltip>
+
 
     </RootStyle>
   );

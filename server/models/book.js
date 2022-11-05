@@ -19,7 +19,8 @@ const bookSchema = new mongoose.Schema({
     },
     language: {
         type: 'string',
-        required: true,  
+        required: true,
+        enum: ["English", "Sinhala", "Tamil"]  
     },
     category: {
         type: 'string',

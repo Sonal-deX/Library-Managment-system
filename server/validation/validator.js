@@ -28,12 +28,10 @@ module.exports.bookValidation = (req, res, next) => {
         bookId: joi.number().required(),
         title: joi.string().required().escapeHTML(),
         author: joi.string().required().escapeHTML(),
-        descriptin: joi.string().escapeHTML(),
+        description: joi.string().escapeHTML(),
         language: joi.string().required().escapeHTML(),
         category: joi.string().required().escapeHTML(),
         qty: joi.number().required(),
-        availability: joi.number(),
-        status: joi.number(),
         img: joi.array().items(joi.string().required(),joi.string().required())
     })
     const { error } = schema.validate(req.body)
@@ -51,18 +49,17 @@ module.exports.bookValidation = (req, res, next) => {
 module.exports.paperValidation = (req, res, next) => {
     const schema = joi.object({
         paperId: joi.number().required(),
-        title: joi.string().required().escapeHTML(),
         grade: joi.number().required(),
         subject: joi.string().required().escapeHTML(),
         year: joi.number().required(),
         paperType: joi.string().required().escapeHTML(),
         language: joi.string().required().escapeHTML(),
         qty: joi.number().required(),
-        status: joi.number().required(),
     })
     const { error } = schema.validate(req.body)
     if (error) {
         res.status(400).json({
+            message:'validation error',
             error: error.details[0].message
         });
     } else {

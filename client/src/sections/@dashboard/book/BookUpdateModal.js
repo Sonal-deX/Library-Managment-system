@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Grid, TextField, createTheme, ThemeProvider, Card, Container, colors } from '@mui/material';
+import { Grid, TextField, createTheme, ThemeProvider, Card, Container, colors, FormControl } from '@mui/material';
 import { green, grey } from '@mui/material/colors';
 import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
@@ -56,11 +56,12 @@ export default function BookUpdateModal(props) {
     const [bookcategory, setBookcategory] = React.useState()
     const [booklanguage, setBooklanguage] = React.useState()
     const [bookqty, setBookqty] = React.useState()
+    const [bookDescription, setBookDescription] = React.useState()
 
     const [updatePrevimg, setupdatePrevimg] = React.useState()
     const [prevImg, setprevimg] = React.useState()
     const [img, setimg] = React.useState()
-    const [checkImg,setcheckImg] = React.useState()
+    const [checkImg, setcheckImg] = React.useState()
 
     const formHandler = (e) => {
         e.target.name === 'bookId' ? setBookid(e.target.value)
@@ -68,12 +69,14 @@ export default function BookUpdateModal(props) {
                 : e.target.name === 'category' ? setBookcategory(e.target.value)
                     : e.target.name === 'qty' ? setBookqty(e.target.value)
                         : e.target.name === 'language' ? setBooklanguage(e.target.value)
-                            : setBookauthor(e.target.value)
+                            : e.target.name === 'author' ? setBookauthor(e.target.value)
+                                : setBookDescription(e.target.value)
+
 
     }
 
     React.useEffect(() => {
-        if (props.book.img !=='null') {
+        if (props.book.img !== 'null') {
             setprevimg(`https://res.cloudinary.com/dvn2f46xi/image/upload/v1665732359/${props.book.img}`)
             setimg(props.book.img)
             setupdatePrevimg(props.book.img)
@@ -96,15 +99,15 @@ export default function BookUpdateModal(props) {
         reader.readAsDataURL(file)
         reader.onload = () => {
             const imgCheck = reader.result.includes('video')
-            if(imgCheck === true) {
+            if (imgCheck === true) {
                 console.log("not an image");
             }
             setprevimg(reader.result)
             setimg(reader.result)
         }
-        
-        
-        
+
+
+
     }
 
     const submitHandler = () => {
@@ -114,7 +117,9 @@ export default function BookUpdateModal(props) {
             author: bookauthor,
             language: booklanguage,
             category: bookcategory,
+            description: bookDescription,
             qty: bookqty,
+
             img: [img, updatePrevimg]
         }
         axios.put(`http://localhost:8000/book/update/${props.book._id}`, data)
@@ -149,105 +154,120 @@ export default function BookUpdateModal(props) {
             >
                 <DialogContent>
 
-                    <ThemeProvider theme={theme}>
-                        <Typography
-                            variant='h4'
-                            sx={{ paddingBottom: '10px', color: green[600] }}>
-                            Edit Book
-                        </Typography>
+                    <FormControl>
+                        <ThemeProvider theme={theme}>
+                            <Typography
+                                variant='h4'
+                                sx={{ paddingBottom: '10px', color: green[600] }}>
+                                Edit Book
+                            </Typography>
 
-                        <TextField
-                            name='bookId'
-                            sx={{ paddingBottom: '10px' }}
-                            color="primary"
-                            helperText="Enter ID of the Book"
-                            fullWidth
-                            id="filled-basic"
-                            label="Book ID"
-                            onChange={formHandler}
-                            defaultValue={props.book.bookId}
-                        />
+                            <TextField
+                                name='bookId'
+                                sx={{ paddingBottom: '10px' }}
+                                color="primary"
+                                helperText="Enter ID of the Book"
+                                fullWidth
+                                id="filled-basic"
+                                label="Book ID*"
+                                onChange={formHandler}
+                                defaultValue={props.book.bookId}
+                            />
 
-                        <TextField
-                            name='title'
-                            sx={{ paddingBottom: '10px' }}
-                            color="primary"
-                            helperText="Enter Name of the Book"
-                            fullWidth
-                            id="filled-basic"
-                            label="Book Title"
-                            onChange={formHandler}
-                            defaultValue={props.book.title}
-                        />
+                            <TextField
+                                name='title'
+                                sx={{ paddingBottom: '10px' }}
+                                color="primary"
+                                helperText="Enter Name of the Book"
+                                fullWidth
+                                id="filled-basic"
+                                label="Book Title*"
+                                onChange={formHandler}
+                                defaultValue={props.book.title}
+                            />
 
 
-                        <TextField
-                            name='author'
-                            sx={{ paddingBottom: '10px' }}
-                            color="primary"
-                            helperText="Enter Author of the Book"
-                            fullWidth
-                            id="filled-basic"
-                            label="Book Author"
-                            onChange={formHandler}
-                            defaultValue={props.book.author}
-                        />
+                            <TextField
+                                name='author'
+                                sx={{ paddingBottom: '10px' }}
+                                color="primary"
+                                helperText="Enter Author of the Book"
+                                fullWidth
+                                id="filled-basic"
+                                label="Book Author*"
+                                onChange={formHandler}
+                                defaultValue={props.book.author}
+                            />
 
-                        <TextField
-                            name='category'
-                            sx={{ paddingBottom: '10px' }}
-                            color="primary"
-                            helperText="Enter Category of the Book"
-                            fullWidth
-                            id="filled-basic"
-                            label="Book Category"
-                            onChange={formHandler}
-                            defaultValue={props.book.category}
-                        />
+                            <TextField
+                                name='category'
+                                sx={{ paddingBottom: '10px' }}
+                                color="primary"
+                                helperText="Enter Category of the Book"
+                                fullWidth
+                                id="filled-basic"
+                                label="Book Category*"
+                                onChange={formHandler}
+                                defaultValue={props.book.category}
+                            />
 
-                        <Grid container>
-                            <Grid item xs={5}>
+                            <Grid container>
+                                <Grid item xs={5}>
+                                    <TextField
+                                        name='language'
+                                        sx={{ paddingBottom: '10px' }}
+                                        color="primary"
+                                        helperText="Enter Language of the Book"
+                                        fullWidth id="filled-basic"
+                                        label="Book Language*"
+                                        onChange={formHandler}
+                                        defaultValue={props.book.language}
+                                    />
+                                </Grid>
+                                <Grid item xs={1} />
+                                <Grid item xs={6}>
+                                    <TextField
+                                        name='qty'
+                                        sx={{ paddingBottom: '10px' }}
+                                        color="primary"
+                                        helperText="Enter Author of the Book"
+                                        fullWidth
+                                        id="filled-basic"
+                                        label="Book Quantity*"
+                                        onChange={formHandler}
+                                        defaultValue={props.book.qty}
+                                    />
+                                </Grid>
                                 <TextField
-                                    name='language'
+                                    name='description'
                                     sx={{ paddingBottom: '10px' }}
                                     color="primary"
-                                    helperText="Enter Language of the Book"
-                                    fullWidth id="filled-basic"
-                                    label="Book Language"
-                                    onChange={formHandler}
-                                    defaultValue={props.book.language}
-                                />
-                            </Grid>
-                            <Grid item xs={1} />
-                            <Grid item xs={6}>
-                                <TextField
-                                    name='qty'
-                                    sx={{ paddingBottom: '10px' }}
-                                    color="primary"
-                                    helperText="Enter Author of the Book"
+                                    helperText="Enter Description for the Book"
                                     fullWidth
                                     id="filled-basic"
-                                    label="Book Quantity"
+                                    label="Book Description"
                                     onChange={formHandler}
-                                    defaultValue={props.book.qty}
+                                    defaultValue={props.book.description}
                                 />
+                                <input onChange={imgHandler} type="file" name="img" id="" style={{ backgroundColor: grey[200], padding: '10px' }} />
                             </Grid>
-                            <input onChange={imgHandler} type="file" name="img" id="" style={{ backgroundColor: grey[200], padding: '10px' }} />
-                        </Grid>
-                        {prevImg && <img src={prevImg} alt="chosen" style={{ height: '100px', marginTop: '2px' }} />}
-                        <Button
-                            variant='contained'
-                            onClick={submitHandler}
-                            sx={{
-                                bgcolor: green[300],
-                                border: 1,
-                                borderColor: green[900],
-                                color: green[900],
-                                "&:hover": { bgcolor: green[200] },
-                                marginTop: '10px'
-                            }}><Iconify icon="bi:send" />&nbsp; Submit
-                        </Button>
-                    </ThemeProvider>
+                            {prevImg && <img src={prevImg} alt="chosen" style={{ height: '100px',width:'100px', marginTop: '2px' }} />}
+                            <Button
+                                variant='contained'
+                                onClick={submitHandler}
+                                sx={{
+                                    bgcolor: green[300],
+                                    border: 1,
+                                    borderColor: green[900],
+                                    color: green[900],
+                                    "&:hover": { bgcolor: green[200] },
+                                    marginTop: '10px'
+                                }}><Iconify icon="bi:send" />&nbsp; Submit
+                            </Button>
+                        </ThemeProvider>
+                    </FormControl>
+
+
 
 
                 </DialogContent>

@@ -1,48 +1,48 @@
 const mongoose = require('mongoose');
 
 const paperSchema = new mongoose.Schema({
-    paperId:{
-        type:'number',
+    paperId: {
+        type: 'number',
+        required: true,
+        unique: true,
+    },
+    grade: {
+        type: 'number',
         required: true,
     },
-    title:{
-        type:'string',
-        required: true,
-        lowercase:true
-    },
-    grade:{
-        type:'number',
-        required: true,
-    },
-    subject:{
-        type:'string',
-        required: true,
-        lowercase:true
-    },
-    year:{
-        type:'number',
-        required: true
-    },
-    paperType:{
-        type:'string',
-        required: true,
-        enum:["school paper","provincial paper","divisional paper","past paper"]  
-    },
-    language:{
+    subject: {
         type: 'string',
         required: true,
-        lowercase:true
     },
-    qty:{
-        type:'number',
+    year: {
+        type: 'number',
+        required: true,
+    },
+    paperType: {
+        type: 'string',
+        required: true,
+        enum: ["School Paper", "Provincial Paper", "Zonal Paper", "GCE O/L Past Paper","GCE A/L Past Paper"]
+    },
+    language: {
+        type: 'string',
+        required: true,
+        enum: ["English", "Sinhala", "Tamil"]
+    },
+    qty: {
+        type: 'number',
         required: true
     },
-    status:{
-        type:'number',
+    availability: {
+        type: 'number',
         required: true,
-        enum:[1,2]
+        enum: [1, 2]
+    },
+    status: {
+        type: 'number',
+        required: true,
+        enum: [1, 2]
     }
 
 })
 
-module.exports = mongoose.model('Paper',paperSchema);
+module.exports = mongoose.model('Paper', paperSchema);

@@ -3,6 +3,8 @@ const Papers = require('../models/paper')
 // add Paper controller
 exports.addpaper = async (req, res) => {
     let newPaper = new Papers(req.body)
+    newPaper.status = 1
+    newPaper.availability = 1
     newPaper.save((err) => {
         if (err) {
             return res.status(400).json({

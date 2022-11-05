@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Grid, TextField, createTheme, ThemeProvider, Card, Container, colors} from '@mui/material';
+import { Grid, TextField, createTheme, ThemeProvider, Card, Container, colors } from '@mui/material';
 import Label from '../../../components/Label';
 import { green, grey, blue, red } from '@mui/material/colors';
 import Backdrop from '@mui/material/Backdrop';
@@ -81,14 +81,53 @@ export default function BookUpdateModal(props) {
                 onClose={handleClose}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
+
             >
-                <DialogContent>
-                    <Grid container>
-                        <Grid item xs={12} sm={6} sx={{ margin: '7px', display: 'flex', justifyContent: 'center' }}><img style={{ borderRadius: '10px' }}
-                            src={`https://res.cloudinary.com/dvn2f46xi/image/upload/h_300,w_230,q_100/${props.data.img}`} />
+                <DialogContent sx={{ padding: '0px' }}>
+                    <Grid container sx={{padding:'30px'}}>
+                        <Grid item xs={12} sm={6} sx={{ display: 'flex', justifyContent: 'center' }}><img style={{ borderRadius: '10px',height:'300px',width:'300px' }}
+                            src={`https://res.cloudinary.com/dvn2f46xi/image/upload/q_100/${props.data.img}`} />
                         </Grid>
-                        <Grid item xs={12} sm={4} sx={{ display: 'flex', flexDirection: 'column', margin: '7px', display: 'flex', justifyContent: 'center' }}>
-                            <Typography sx={{marginBottom:'4px'}} textAlign={'center'} variant="" ><h4 style={{ display: 'inline', fontWeight: 'bold' }}>Title:</h4> {props.data.title}</Typography>
+                        <Grid item xs={12} sm={5} sx={{ display: 'flex', flexDirection: 'column', margin: '7px', display: 'flex', justifyContent: 'center' }}>
+                            <table style={{ height: '100%' }}>
+                                <tbody>
+                                    <tr>
+                                        <th>Title:</th>
+                                        <td style={{ textAlign: 'center' }}>{props.data.title}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Author:</th>
+                                        <td style={{ textAlign: 'center' }}>{props.data.author}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Language:</th>
+                                        <td style={{ textAlign: 'center' }}>{props.data.language}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Category:</th>
+                                        <td style={{ textAlign: 'center' }}>{props.data.category}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Quantity:</th>
+                                        <td style={{ textAlign: 'center' }}>{props.data.qty}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Availability:</th>
+                                        <td style={{ textAlign: 'center' }}>
+                                            <Label variant="ghost" color={(props.data.availability === 2 && 'error') || 'success'}>
+                                                {props.data.availability === 1 ? 'Available' : 'Not Available'}
+                                            </Label>
+                                        </td>
+                                    </tr>
+                                    {props.data.description &&
+                                        <tr>
+                                            <th>Description:</th>
+                                            <td style={{ textAlign: 'center' }}>{props.data.description}</td>
+                                        </tr>}
+                                </tbody>
+
+                            </table>
+                            {/* <Typography sx={{marginBottom:'4px'}} textAlign={'center'} variant="" ><h4 style={{ display: 'inline', fontWeight: 'bold' }}>Title:</h4> {props.data.title}</Typography>
                             <Typography sx={{marginBottom:'4px'}} textAlign={'center'} variant="" ><h4 style={{ display: 'inline', fontWeight: 'bold' }}>Author:</h4> {props.data.author}</Typography>
                             <Typography sx={{marginBottom:'4px'}} textAlign={'center'} variant="" ><h4 style={{ display: 'inline', fontWeight: 'bold' }}>Language:</h4> {props.data.language}</Typography>
                             <Typography sx={{marginBottom:'4px'}} textAlign={'center'} variant="" ><h4 style={{ display: 'inline', fontWeight: 'bold' }}>Category:</h4> {props.data.category}</Typography>
@@ -98,7 +137,7 @@ export default function BookUpdateModal(props) {
                                     {props.data.availability === 1 ? 'Available' : 'Not Available'}
                                 </Label>
                             </Typography>
-                            {props.data.description && <Typography sx={{marginBottom:'4px'}} textAlign={'center'} variant="" ><h4 style={{ display: 'inline', fontWeight: 'bold' }}>Title:</h4> {props.data.description}</Typography>}
+                            {props.data.description && <Typography sx={{marginBottom:'4px'}} textAlign={'center'} variant="" ><h4 style={{ display: 'inline', fontWeight: 'bold' }}>Description:</h4> {props.data.description}</Typography>} */}
                         </Grid>
                     </Grid>
 
