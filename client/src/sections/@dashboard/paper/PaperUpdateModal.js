@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { Grid, TextField, createTheme, ThemeProvider, Card, Container, colors, Select, MenuItem, InputLabel, FormControl, FormHelperText } from '@mui/material';
+import { Grid, TextField, createTheme, ThemeProvider, Card, Container, colors, Select, MenuItem, InputLabel, FormControl, FormHelperText, ListItemIcon, ListItemText } from '@mui/material';
 import { green, grey } from '@mui/material/colors';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Iconify from '../../../components/Iconify';
+import { Link as RouterLink } from 'react-router-dom';
 import axios from 'axios';
 
 
@@ -60,6 +61,17 @@ export default function TransitionsModal(props) {
         setOpen(false)
     };
 
+    React.useEffect(() => {
+        setPaperid(props.paper.paperId)
+        setPaperGrade(props.paper.grade)
+        setPaperSubject(props.paper.subject)
+        setPaperYear(props.paper.year)
+        setPaperqty(props.paper.qty)
+        setPaperType(props.paper.paperType)
+        setLanguage(props.paper.language)
+
+    }, [])
+
     const formHandler = (e) => {
         e.target.name === 'paperId' ? setPaperid(e.target.value)
             : e.target.name === 'grade' ? setPaperGrade(e.target.value)
@@ -77,26 +89,31 @@ export default function TransitionsModal(props) {
             language: language,
             year: paperYear,
             qty: paperqty,
-            paperType:paperType
+            paperType: paperType
         }
-        axios.post('http://localhost:8000/paper', data)
-            .then((response) => {
-                if (response.data.success) {
-                    setOpen(false)
-                    props.paperReload(false)
-                    setPaperType('')
-                    setLanguage('')
-                }
-            })
-            .catch((error) => {
-                console.log(error);
+        axios.put(`http://localhost:8000/paper/update/${props.paper._id}`, data)
+        .then((response) => {
+            if (response.data.success) {
+                setOpen(false)
+                props.onClose(false)
+                props.reload(false)
+            }
+        })
+        .catch((error) => {
+            console.log(error);
 
-            })
+        })
     }
 
     return (
         <div>
-            <Button variant="contained" sx={{ bgcolor: green[600], ":hover": { bgcolor: green[700] } }} startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleOpen}>New Paper</Button>
+
+            <MenuItem onClick={handleOpen} component={RouterLink} to="#" sx={{ color: 'text.secondary' }}>
+                <ListItemIcon>
+                    <Iconify sx={{ color: 'orange' }} icon="eva:edit-fill" width={24} height={24} />
+                </ListItemIcon>
+                <ListItemText primary="Edit" primaryTypographyProps={{ variant: 'body2' }} />
+            </MenuItem>
 
             <Dialog
                 open={open}
@@ -111,7 +128,7 @@ export default function TransitionsModal(props) {
                             <Typography
                                 variant='h4'
                                 sx={{ paddingBottom: '10px', color: green[600] }}>
-                                Add Paper
+                                Update Paper
                             </Typography>
                             <TextField
                                 name='paperId'
@@ -122,6 +139,7 @@ export default function TransitionsModal(props) {
                                 id="filled-basic"
                                 label="Paper ID*"
                                 onChange={formHandler}
+                                defaultValue={props.paper.paperId}
                             />
 
                             <TextField
@@ -132,7 +150,9 @@ export default function TransitionsModal(props) {
                                 fullWidth
                                 id="filled-basic"
                                 label="Grade*"
-                                onChange={formHandler} />
+                                onChange={formHandler}
+                                defaultValue={props.paper.grade}
+                            />
 
                             <TextField
                                 name='subject'
@@ -142,7 +162,9 @@ export default function TransitionsModal(props) {
                                 fullWidth
                                 id="filled-basic"
                                 label="Subject*"
-                                onChange={formHandler} />
+                                onChange={formHandler}
+                                defaultValue={props.paper.subject}
+                            />
 
                             <Grid container>
                                 <Grid item xs={5}>
@@ -153,7 +175,9 @@ export default function TransitionsModal(props) {
                                         helperText="Select year"
                                         fullWidth id="filled-basic"
                                         label="Year*"
-                                        onChange={formHandler} />
+                                        onChange={formHandler}
+                                        defaultValue={props.paper.year}
+                                    />
                                 </Grid>
                                 <Grid item xs={1} />
                                 <Grid item xs={6}>
@@ -186,7 +210,7 @@ export default function TransitionsModal(props) {
                                         onChange={handleChange}
                                         name='language'
                                     >
-                                        <MenuItem value={'English'}>English</MenuItem>
+                                        <MenuItem value={'English'}>English</MenuItem>s
                                         <MenuItem value={'Sinhala'}>Sinhala</MenuItem>
                                         <MenuItem value={'Tamil'}>Tamil</MenuItem>
                                     </Select>
@@ -200,7 +224,9 @@ export default function TransitionsModal(props) {
                                     fullWidth
                                     id="filled-basic"
                                     label="Quantity*"
-                                    onChange={formHandler} />
+                                    onChange={formHandler}
+                                    defaultValue={props.paper.qty}
+                                />
 
                             </Grid>
                             <Button

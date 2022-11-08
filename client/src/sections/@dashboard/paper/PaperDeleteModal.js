@@ -44,14 +44,14 @@ export default function BookUpdateModal(props) {
     };
 
     const bookDeleteHandler = () => {
-        props.book.status = 2
-        const data = props.book
-        axios.delete(`http://localhost:8000/book/delete/${props.book._id}`, {data})
+        props.paper.status = 2
+        const data = props.paper
+        axios.delete(`http://localhost:8000/paper/delete/${props.paper._id}`, {data})
             .then((response) => {
                 if (response.data.success) {
                     setOpen(false)
                     props.onClose(false)
-                    props.bookReload(false)
+                    props.reload(false)
                 }
             })
             .catch((error) => {
@@ -85,7 +85,7 @@ export default function BookUpdateModal(props) {
             >
                 <DialogContent>
                     <Box>
-                        <Typography sx={{ marginBottom: '10px' }}>Are you sure you want to Delete this Book?</Typography>
+                        <Typography sx={{ marginBottom: '10px' }}>Are you sure you want to Delete this Paper?</Typography>
                         <Box sx={{ display: 'flex', justifyContent: 'space-evenly' }}>
                             <Button variant='contained' onClick={bookDeleteHandler} sx={{ bgcolor: red[500], "&:hover": { bgcolor: red[700] } }} >Yes</Button>
                             <Button variant='contained' onClick={closeHandler} sx={{ bgcolor: green[500], "&:hover": { bgcolor: green[700] } }}>No</Button>

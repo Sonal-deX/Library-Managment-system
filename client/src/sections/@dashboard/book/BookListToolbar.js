@@ -32,7 +32,7 @@ const SearchStyle = styled(OutlinedInput)(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 
-export default function UserListToolbar({ numSelected, filterName, onFilterName, clearS }) {
+export default function UserListToolbar({ numSelected, onFilterName, clearS,name }) {
   const [value, setValue] = React.useState()
   const x = (e) => {
     const search = e.target.value
@@ -61,7 +61,7 @@ export default function UserListToolbar({ numSelected, filterName, onFilterName,
         <SearchStyle
           onChange={x}
           value={value || ''}
-          placeholder="Search user..."
+          placeholder={name=="book"?"Search Book":name="paper"?"Search Paper":null}
           startAdornment={
             <InputAdornment position="start">
               <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled', width: 20, height: 20 }} />

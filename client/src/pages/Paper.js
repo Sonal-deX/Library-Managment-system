@@ -27,7 +27,7 @@ import Scrollbar from '../components/Scrollbar';
 import Iconify from '../components/Iconify';
 import SearchNotFound from '../components/SearchNotFound';
 import { BookListHead } from '../sections/@dashboard/book';
-import { PaperAddModal } from 'src/sections/@dashboard/paper';
+import { PaperAddModal, PaperMoreMenu } from 'src/sections/@dashboard/paper';
 import { BookListToolbar } from '../sections/@dashboard/book';
 
 // mock
@@ -38,9 +38,9 @@ import USERLIST from '../_mock/user';
 const TABLE_HEAD = [
   { id: 'id', label: 'PaperID', alignRight: false },
   // { id: 'title', label: 'Title', alignRight: false },
-  { id: 'subject', label: 'Subject', alignRight: false },
+  { id: 'subject', label: '.Subject', alignRight: false },
   { id: 'year', label: 'Year', alignRight: false },
-  { id: 'grade', label: 'Grade', alignRight: false },
+  { id: 'grade', label: '.Grade', alignRight: false },
   { id: 'language', label: 'Language', alignRight: false },
   { id: 'qty', label: 'Quantity', alignRight: false },
   { id: 'avl', label: 'Availability', alignRight: false },
@@ -129,6 +129,7 @@ export default function Book() {
   };
 
   const filterData = (searchKey) => {
+    setSearchKey(searchKey)
     searchKey = searchKey.toLowerCase()
     const result = Paper.filter((paper) =>
       paper.subject.toLowerCase().includes(searchKey) || paper.grade.toString().includes(searchKey)
@@ -136,17 +137,11 @@ export default function Book() {
     setSeacrhData(result)
   }
 
-  const handleFilterByName = (event) => {
-    const searchKey = event.target.value
-    setSearchKey(searchKey)
-    filterData(searchKey)
-  };
-
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - Paper.length) : 0;
 
   const papers = applySortFilter(seacrhData, getComparator(order, orderBy), filterName);
 
-  const isUserNotFound = papers.length === 0;
+  const isNotFound = papers.length === 0;
 
   return (
     <Page title="User">
@@ -161,7 +156,7 @@ export default function Book() {
         </Stack>
 
         <Card>
-          <BookListToolbar onFilterName={filterData} clearS={clearSearchKey} />
+          <BookListToolbar onFilterName={filterData} clearS={clearSearchKey} name={"paper"} />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
@@ -194,7 +189,7 @@ export default function Book() {
                           </Label>
                         </TableCell>
                         <TableCell align="right">
-
+                          <PaperMoreMenu selectedPaper={paper} paperReload={addpaperReload} />
                         </TableCell>
                       </TableRow>
                     );
@@ -206,7 +201,7 @@ export default function Book() {
                   )}
                 </TableBody>
 
-                {isUserNotFound && (
+                {isNotFound && (
                   <TableBody>
                     <TableRow>
                       <TableCell align="center" colSpan={6} sx={{ py: 3 }}>

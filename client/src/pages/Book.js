@@ -36,7 +36,7 @@ import USERLIST from '../_mock/user';
 
 const TABLE_HEAD = [
   { id: 'id', label: 'BookID', alignRight: false },
-  { id: 'title', label: 'Title', alignRight: false },
+  { id: 'title', label: '.Title', alignRight: false },
   { id: 'author', label: 'Author', alignRight: false },
   { id: 'mdm', label: 'Medium', alignRight: false },
   { id: 'ctgry', label: 'Category', alignRight: false },
@@ -137,13 +137,11 @@ export default function Book() {
     setSeacrhData(result)
   }
 
-
-
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - book.length) : 0;
 
   const books = applySortFilter(seacrhData, getComparator(order, orderBy), filterName);
 
-  const isUserNotFound = books.length === 0;
+  const isNotFound = books.length === 0;
 
 
 
@@ -160,7 +158,7 @@ export default function Book() {
         </Stack>
 
         <Card>
-          <BookListToolbar onFilterName={filterData} clearS={clearSearchKey} />
+          <BookListToolbar onFilterName={filterData} clearS={clearSearchKey} name={"book"} />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
@@ -210,7 +208,7 @@ export default function Book() {
                   )}
                 </TableBody>
 
-                {isUserNotFound && (
+                {isNotFound && (
                   <TableBody>
                     <TableRow>
                       <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
